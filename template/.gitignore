@@ -1,0 +1,7 @@
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Data mounts
+data/

@@ -1,0 +1,77 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-xml
+      - id: check-added-large-files
+      - id: check-symlinks
+      - id: check-merge-conflict
+        args: [--assume-in-merge]
+      - id: detect-private-key
+  - repo: local
+    hooks:
+      - id: forbidden-files
+        name: forbidden files
+        entry: found Copier update rejection files; review and remove them before merging.
+        language: fail
+        files: "\\.rej$"
+  - repo: local
+    hooks:
+      - id: check-poetry
+        name: Poetry check
+        description: Validates the structure of the pyproject.toml file
+        entry: poetry --directory backend check
+        language: system
+        pass_filenames: false
+        files: pyproject.toml
+  - repo: https://github.com/hhatto/autopep8
+    rev: v2.1.0
+    hooks:
+      - id: autopep8
+        args: [-i, --max-line-length=150]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--line-length=150]
+  - repo: local  # see https://github.com/worldworm/copier-poetry-meta/issues/7
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: poetry --directory backend run mypy --config-file=backend/pyproject.toml backend
+        language: system
+        pass_filenames: false
+  - repo: https://github.com/DanielNoord/pydocstringformatter
+    rev: v0.7.3
+    hooks:
+      - id: pydocstringformatter
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.8
+    hooks:
+      - id: bandit
+        args: ["-r", "-lll"]
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: poetry --directory backend run pylint
+        language: system
+        types: [python]
+        args: [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+            "--rcfile=backend/.pylintrc", # Custom config file
+          ]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: poetry --directory backend run pytest backend
+        language: system
+        pass_filenames: false

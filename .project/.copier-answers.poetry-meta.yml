@@ -1,0 +1,6 @@
+# Changes here will be overwritten by Copier
+_commit: v1.1.0
+_src_path: https://github.com/worldworm/copier-poetry-meta.git
+subdir_name: backend
+template_suffix: quasar
+use_subdir: true

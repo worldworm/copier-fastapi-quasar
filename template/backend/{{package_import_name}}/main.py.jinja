@@ -1,0 +1,14 @@
+"""Main module."""
+{% if use_database_migrations -%}
+from . import database
+{% endif %}
+
+def main() -> None:
+    """Main function."""
+
+
+if __name__ == "__main__":
+    {% if use_database_migrations -%}
+    database.apply_migrations()
+    {% endif -%}
+    main()
