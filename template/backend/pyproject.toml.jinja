@@ -12,6 +12,12 @@ packages = [{include = "{{ package_import_name }}"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
+fastapi = "^0.111.0"
+uvicorn = {extras = ["standard"], version = "^0.30.1"}
+pydantic = {extras = ["email"], version = "^2.7.3"}
+{% if use_versionizer -%}
+fastapi-versionizer = "^4.0.1"
+{% endif -%}
 loguru = "^0.7.2"
 {% if use_dotenv -%}
 pydantic-settings = "^2.2.1"
@@ -69,6 +75,10 @@ post_install = "pre-commit-install"
     [tool.poe.tasks.run]
     help = "Start the project"
     cmd = "python -m {{ package_import_name }}.main"
+
+    [tool.poe.tasks.dev]
+    help = "Start the development server"
+    cmd = "uvicorn {{ package_import_name }}.main:app --reload"
 
     [tool.poe.tasks.lint]
     help = "Lint the project"

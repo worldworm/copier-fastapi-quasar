@@ -92,3 +92,8 @@ use_database_migrations:
   help: Use database migrations?
   default: "{{ true if use_database else false }}"
   when: "{{ use_database }}"
+
+use_versionizer:
+  type: bool
+  help: Use versionizer?
+  default: true

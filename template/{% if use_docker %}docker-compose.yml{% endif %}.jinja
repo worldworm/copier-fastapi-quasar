@@ -20,6 +20,8 @@ services:
     build: backend
     container_name: {{ project_name }}-backend
     restart: unless-stopped
+    ports:
+      - 8000:8000
     {% if use_dotenv -%}
     env_file: backend/.env
     {% endif -%}
