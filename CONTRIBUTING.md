@@ -6,3 +6,4 @@ Changes that affect the flavour of this template should be made here.
 
 The following meta templates have been used:
 - [copier-poetry-meta](https://github.com/worldworm/copier-poetry-meta)
+- [copier-quasar-meta](https://github.com/worldworm/copier-quasar-meta)

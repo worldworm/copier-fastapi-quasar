@@ -4,6 +4,15 @@
         "ms-python.isort",
         "ms-python.pylint",
         "ms-python.autopep8",
-        "ms-python.mypy-type-checker"
+        "ms-python.mypy-type-checker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "vue.volar"
+    ],
+    "unwantedRecommendations": [
+        "octref.vetur",
+        "hookyqr.beautify",
+        "dbaeumer.jshint",
+        "ms-vscode.vscode-typescript-tslint-plugin"
     ]
 }

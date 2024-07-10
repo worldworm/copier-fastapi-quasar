@@ -75,3 +75,10 @@ repos:
         entry: poetry --directory backend run pytest backend
         language: system
         pass_filenames: false
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: npm --prefix frontend run lint
+        language: system
+        pass_filenames: false

@@ -5,6 +5,8 @@ _answers_file: .copier-answers.fastapi-quasar.yml
 _tasks:
   - "[ -f README.md ] || touch backend/README.md"
   - "poetry --directory backend install"
+  - "npm --prefix frontend install"
+  - "[ -d .git ] && pre-commit install --install-hooks || true"
 
 project_name:
   type: str

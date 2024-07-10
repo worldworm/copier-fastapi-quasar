@@ -16,12 +16,25 @@ default:
         - backend/.venv
         - backend/.pip
       policy: pull
+    - &npm-cache
+      key:
+        prefix: "npm"
+        files:
+          - frontend/package-lock.json
+          - .gitlab-ci.yml
+      paths:
+        - frontend/.npm
+      policy: pull
 
 .poetry-install: &poetry-install
   - cd backend
   - pip3 install -q --cache-dir=.pip poetry
   - poetry config virtualenvs.in-project true
   - poetry install --no-root --no-interaction --no-ansi
+
+.npm-install: &npm-install
+  - cd frontend
+  - npm ci --cache .npm --prefer-offline
 
 poetry_cache:
   stage: prepare
@@ -33,6 +46,17 @@ poetry_cache:
       policy: pull-push
   script:
     - *poetry-install
+
+npm_cache:
+  stage: prepare
+  image: $IMAGE_NODE
+  tags:
+    - $RUNNER_TEST
+  cache:
+    - <<: *npm-cache
+      policy: pull-push
+  script:
+    - *npm-install
 
 pylint:
   stage: test
@@ -103,8 +127,26 @@ pytest:
         coverage_format: cobertura
         path: coverage.xml
 
+eslint:
+  stage: test
+  image: $IMAGE_NODE
+  only:
+    changes:
+      - .gitlab-ci.yml
+      - frontend/.eslintrc.cjs
+      - "**/*.vue"
+      - "**/*.ts"
+      - "**/*.js"
+  cache: [*npm-cache]
+  tags:
+    - $RUNNER_TEST
+  script:
+    - *npm-install
+    - npm run lint
+
 variables:
   IMAGE_PYTHON: python:3.10
+  IMAGE_NODE: node:20-alpine
   RUNNER_TEST: docker
   RUNNER_BUILD: docker
   {% if use_docker -%}
@@ -176,6 +218,64 @@ publish-docker-backend-latest:
     GIT_STRATEGY: none
     DOCKER_TAG: latest
     DOCKER_IMAGE_SUFFIX: backend
+  cache: []
+  tags:
+    - $RUNNER_BUILD
+  script:
+    - *docker-publish
+  only:
+    - tags
+
+build-docker-frontend:
+  stage: build
+  image: docker:dind
+  variables:
+    DOCKER_IMAGE_SUFFIX: frontend
+  cache: []
+  tags:
+    - $RUNNER_BUILD
+  script:
+    - *docker-build
+  except:
+    - tags
+
+publish-docker-frontend-edge:
+  stage: publish
+  image: docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TAG: edge
+    DOCKER_IMAGE_SUFFIX: frontend
+  cache: []
+  tags:
+    - $RUNNER_BUILD
+  script:
+    - *docker-publish
+  only:
+    - main
+
+publish-docker-frontend-release:
+  stage: publish
+  image: docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TAG: $CI_COMMIT_TAG
+    DOCKER_IMAGE_SUFFIX: frontend
+  cache: []
+  tags:
+    - $RUNNER_BUILD
+  script:
+    - *docker-publish
+  only:
+    - tags
+
+publish-docker-frontend-latest:
+  stage: publish
+  image: docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TAG: latest
+    DOCKER_IMAGE_SUFFIX: frontend
   cache: []
   tags:
     - $RUNNER_BUILD
