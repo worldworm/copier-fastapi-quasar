@@ -5,4 +5,5 @@ DB_NAME={{ "data/db/" ~ project_name ~ ".sqlite3" if database_type == "sqlite" e
 DB_USER={{ "root"  if database_type == "mysql" else "postgres" if database_type == "postgres" else "" }}
 DB_PASSWORD=
 DB_AUTO_MIGRATE=True
-{% endif %}
+{% endif -%}
+BACKEND_ROOT_PATH=""

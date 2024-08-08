@@ -8,10 +8,12 @@ from fastapi_versionizer.versionizer import Versionizer
 from . import database
 {% endif -%}
 from .api.routers import router
+from .config import settings
 
 app = FastAPI(
     title="{{ project_name }}",
     summary="{{ project_description }}",
+    root_path=settings.BACKEND_ROOT_PATH,
     contact={
         "name": "SourceCode {{ repository_provider }} repository",
         "url": "{{ repository_url }}"

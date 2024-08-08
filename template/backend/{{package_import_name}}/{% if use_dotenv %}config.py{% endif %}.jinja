@@ -13,5 +13,6 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_AUTO_MIGRATE: bool = True
 {% endif %}
+    BACKEND_ROOT_PATH: str = ""
 
 settings = Settings()
