@@ -24,10 +24,10 @@ interface ApiResponse<T> {
   };
 }
 
-export function usePagedTableLoad<T>(apiEndpoint: string, defaultSortBy: string, defaultFilterBy: string) {
+export function usePagedTableLoad<T>(apiEndpoint: string, defaultSortBy: string) {
   const rows: Ref<T[]> = ref([]);
   const loadingTable = ref(true);
-  const filter = ref("");
+  const filter = ref<Record<string, string | null>>({});
   const pagination: Ref<Pagination> = ref({
     rowsPerPage: 10,
     page: 1,
@@ -37,9 +37,9 @@ export function usePagedTableLoad<T>(apiEndpoint: string, defaultSortBy: string,
     descending: false,
   });
 
-  async function loadData(page: number, size: number, sortBy = defaultSortBy, descending = false, filter = "") {
+  async function loadData(page: number, size: number, sortBy = defaultSortBy, descending = false, filter = null) {
     loadingTable.value = true;
-    const response = await api.get<ApiResponse<T>>(`${apiEndpoint}/${fullParamsStr(page, size, sortBy, descending, defaultFilterBy, filter)}`);
+    const response = await api.get<ApiResponse<T>>(`${apiEndpoint}/${fullParamsStr(page, size, sortBy, descending, filter)}`);
     rows.value = response.data.data;
     pagination.value.rowsNumber = response.data.pagination.result_count;
     pagination.value.totalCount = response.data.pagination.total_count;

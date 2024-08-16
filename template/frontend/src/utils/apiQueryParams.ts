@@ -9,12 +9,19 @@ export function pageSizeStr(size: number): string {
   return `&size=${size}`;
 }
 
-export function filterStr(key: string, filter: string): string {
+export function filterStr(filter: Record<string, string | null> | null): string {
   if (!filter) return "";
-  const wildcard = encodeURIComponent("%");
-  return `&filter=${key}:${wildcard}${encodeURIComponent(filter.trim())}${wildcard}`;
+  //const wildcard = encodeURIComponent("%");
+  const wildcard = "";
+  return (
+    Object.entries(filter)
+      .filter(([, value]) => value !== null)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      .map(([key, value]) => `&filter=${key}:${wildcard}${encodeURIComponent(value!.trim())}${wildcard}`)
+      .join("")
+  );
 }
 
-export function fullParamsStr(page: number, size: number, sortBy: string, descending: boolean, filterKey: string, filter: string): string {
-  return `?page=${page - 1}${pageSizeStr(size)}${sortByStr(sortBy, descending)}${filterStr(filterKey, filter)}`;
+export function fullParamsStr(page: number, size: number, sortBy: string, descending: boolean, filter: Record<string, string | null> | null): string {
+  return `?page=${page - 1}${pageSizeStr(size)}${sortByStr(sortBy, descending)}${filterStr(filter)}`;
 }
