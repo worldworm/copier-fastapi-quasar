@@ -1,12 +1,6 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    :to="link"
-    :href="externalLink"
-    v-ripple
-    :active="$router.currentRoute.value.path == link"
-  >
+  <!-- @vue-ignore -->
+  <q-item v-ripple clickable tag="a" :to="link" :href="external_link" :active="$router.currentRoute.value.path == link">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
@@ -38,7 +32,7 @@ const props = withDefaults(defineProps<MenuItemProps>(), {
   separator: false,
 });
 
-const externalLink = computed((): string | undefined => {
+const external_link = computed((): string | undefined => {
   return /^https?:\/\//.test(props.link) ? props.link : undefined;
 });
 </script>

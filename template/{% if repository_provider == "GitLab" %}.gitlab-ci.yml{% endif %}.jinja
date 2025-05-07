@@ -57,6 +57,13 @@ poetry_cache:
 npm_cache:
   stage: prepare
   image: $IMAGE_NODE
+  only:
+    changes:
+      - .gitlab-ci.yml
+      - [[ subdir_name ~ "/" if use_subdir else "" ]].eslintrc.cjs
+      - "**/*.vue"
+      - "**/*.ts"
+      - "**/*.js"
   tags:
     - $RUNNER_TEST
   cache:
@@ -140,7 +147,7 @@ eslint:
   only:
     changes:
       - .gitlab-ci.yml
-      - frontend/.eslintrc.cjs
+      - [[ subdir_name ~ "/" if use_subdir else "" ]].eslintrc.cjs
       - "**/*.vue"
       - "**/*.ts"
       - "**/*.js"

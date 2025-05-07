@@ -99,3 +99,8 @@ use_versionizer:
   type: bool
   help: Use versionizer?
   default: true
+
+use_pinia:
+  type: bool
+  help: Use Pinia?
+  default: true
