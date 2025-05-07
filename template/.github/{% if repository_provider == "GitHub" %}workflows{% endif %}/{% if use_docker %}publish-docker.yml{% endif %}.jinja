@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  publish-frontend-edge:
+  publish-backend-edge:
     runs-on: ubuntu-latest
     if: {{"${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}"}}
     steps:
@@ -21,12 +21,12 @@ jobs:
           username: {{"${{ github.repository_owner }}"}}
           password: {{"${{ secrets.DOCKERHUB_TOKEN }}"}}
       - name: Pull Docker image
-        run: docker pull {{"${{ github.repository }}"}}-frontend:{{"${{ github.sha }}"}}
+        run: docker pull {{"${{ github.repository }}"}}-backend:{{"${{ github.sha }}"}}
       - name: Tag Docker image
-        run: docker tag {{"${{ github.repository }}"}}-frontend:{{"${{ github.sha }}"}} {{"${{ github.repository }}"}}-frontend:edge
+        run: docker tag {{"${{ github.repository }}"}}-backend:{{"${{ github.sha }}"}} {{"${{ github.repository }}"}}-backend:edge
       - name: Push Docker image
-        run: docker push {{"${{ github.repository }}"}}-frontend:edge
-  publish-frontend-release:
+        run: docker push {{"${{ github.repository }}"}}-backend:edge
+  publish-backend-release:
     runs-on: ubuntu-latest
     if: {{"${{ github.ref_type == 'tag' }}"}}
     steps:
@@ -36,10 +36,10 @@ jobs:
           username: {{"${{ github.repository_owner }}"}}
           password: {{"${{ secrets.DOCKERHUB_TOKEN }}"}}
       - name: Pull Docker image
-        run: docker pull {{"${{ github.repository }}"}}-frontend:{{"${{ github.sha }}"}}
+        run: docker pull {{"${{ github.repository }}"}}-backend:{{"${{ github.sha }}"}}
       - name: Tag Docker image
         run: |
-          docker tag {{"${{ github.repository }}"}}-frontend:{{"${{ github.sha }}"}} {{"${{ github.repository }}"}}-frontend:{{"${{ github.ref_name }}"}}
-          docker tag {{"${{ github.repository }}"}}-frontend:{{"${{ github.sha }}"}} {{"${{ github.repository }}"}}-frontend:latest
+          docker tag {{"${{ github.repository }}"}}-backend:{{"${{ github.sha }}"}} {{"${{ github.repository }}"}}-backend:{{"${{ github.ref_name }}"}}
+          docker tag {{"${{ github.repository }}"}}-backend:{{"${{ github.sha }}"}} {{"${{ github.repository }}"}}-backend:latest
       - name: Push Docker image
-        run: docker push --all-tags {{"${{ github.repository }}"}}-frontend
+        run: docker push --all-tags {{"${{ github.repository }}"}}-backend

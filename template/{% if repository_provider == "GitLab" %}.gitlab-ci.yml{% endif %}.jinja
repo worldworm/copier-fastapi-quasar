@@ -39,6 +39,13 @@ default:
 poetry_cache:
   stage: prepare
   image: $IMAGE_PYTHON
+  only:
+    changes:
+      - "**/*.py"
+      - .gitlab-ci.yml
+      - backend/.pylintrc
+      - backend/pyproject.toml
+      - backend/poetry.lock
   tags:
     - $RUNNER_TEST
   cache:

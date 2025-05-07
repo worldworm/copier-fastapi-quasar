@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  build-frontend:
+  build-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
@@ -23,7 +23,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: "{{"{{ defaultContext }}"}}:frontend"
+          context: "{{"{{ defaultContext }}"}}:backend"
           push: {{"${{ github.event_name != 'pull_request' }}"}}
-          tags: {{"${{ github.repository }}"}}-frontend:{{"${{ github.sha }}"}}
-          cache-from: type=registry,ref={{"${{ github.repository }}"}}-frontend:edge
+          tags: {{"${{ github.repository }}"}}-backend:{{"${{ github.sha }}"}}
+          cache-from: type=registry,ref={{"${{ github.repository }}"}}-backend:edge
